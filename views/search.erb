@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/assets/css/white.css">
+<div>
+    <form action='/search' method='post'>
+        <input type="text" name="search_name" >
+        <input type="submit" value="検索" class="right-button">
+    </form>
+    
+    <div id="result">
+        <% if @results.nil? %>
+            <p>ユーザーIDが見つかりません</p>
+        <% else %>
+            <% @results.each do |result| %>
+                <a href="/search/<%= result.id %>"><%= result.user_name %></a>
+                <a href="/search/<%= result.id %>"><%= result.display_name %></a>
+            <% end %>
+        <% end %>
+    </div>
+    <div id="follow">
+        <p>フォロー中</p>
+        <!-- フォローしている人のuser_idの配列をfollowingsに代入-->
+        <% if @follows.nil? %>
+            <p>フォロー中のユーザーはいません</p>
+        <% else %>
+            <% @follows.each do |follow|%>
+                <a href="/search/<%= User.find(Friend.find(friend.id).follow_id).user_name %>"><%= User.find(Friend.find(friend.id).follow_id).user_name %></a>
+                <a href="/search/<%= User.find(Friend.find(friend.id).follow_id).user_name %>"><%= User.find(Friend.find(friend.id).follow_id).display_name %></a>
+            <% end %>
+        <% end %>
+    </div>
+</div>

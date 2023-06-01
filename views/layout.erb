@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>Runnning late</title>
+	<link rel="stylesheet" href="/assets/css/layout.css">
+</head>
+<body>
+    <% if session[:user] %>
+    <!--　ドロップダウンメニュー思いだすか教科書みる-->
+    <div id="menu">
+        <ul class="nav">
+            <li><a href="/">準備</a></li>
+            <li><a href="/task">タスク一覧</a></li>
+            <li><a href="/search">友達</a></li>
+            <li><a href="/signout">Sign Out</a></li>
+        </ul>
+    </div>
+    <% end %>
+    <%= yield %>
+</body>
+</html>

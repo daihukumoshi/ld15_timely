@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="/assets/css/white.css">
+<div>
+    <p><%= @the_user.display_name %>さんのタスク状況</p>
+    
+    <% if Friend.where(following_id: session[:user], followed_id: @the_user.id).blank? %>
+        <form action='/<%= @the_user.id %>/follow' method='post'>
+            <input type="submit" value="フォローする" class="right-button">
+        </form>
+    <% else %>
+        <form action='/<%= @the_user.id %>/unfollow' method='post'>
+            <input type="submit" value="フォローをやめる" class="right-button">
+        </form>
+    <% end %>
+    <!--重複回避しなきゃまずい-->
+</div>
+
+<div>
+    <!--タスク取得してeach回す-->
+    <% tasks = Task.where(user_id: @the_user.id) %>
+    <% tasks.each do |task|%>
+        <div>
+            <a><%= task.task_name %></a>
+            <a><%= task.minutes %></a>
+            <% if Status.where(task_id: task.id, user_id: @the_user.id).nil? %>
+                <a>Done</a>
+            <% else %>
+                <a>Will</a>
+            <% end %>
+        </div>
+    <% end %>
+    
+</div>
+
+<div>
+    <% sum = 0%>
+    <% tasks = Task.where(user_id: @the_user.id) %>
+    <% for task in tasks do %>
+        <% sum = sum + task.minutes %>
+    <% end %>
+    
+    <% tasks_done = Status.where(user_id: @the_user.id) %>
+    <% for task_done in tasks_done %>
+        <% tasks_done_minutes = Task.where(id: task_done.task_id) %>
+        <% for task_done_minutes in tasks_done_minutes %>
+            <% sum = sum - task_done_minutes.minutes %>
+        <% end %>
+    <% end %>
+    
+    
+    <% need_hour = sum / 60 %>
+    <% need_minutes = sum % 60 %>
+    
+    <% time = Time.now %>
+    <p>出発推定時刻　<%= time.hour.to_i + 9 + need_hour.to_i %>:<%= time.min.to_i + need_minutes.to_i %></p>
+    
+    <% if Need.find_by(user_id: @the_user.id).present? %>
+        <% required_array = Need.find_by(user_id: @the_user.id).needtime.split(":") %>
+        <% required_hour = required_array[0] %>
+        <% required_minute = required_array[1] %>
+        <p>到着推定時刻　<%= time.hour.to_i + 9 + required_hour.to_i %>:<%= time.min.to_i + required_minute.to_i %></p>
+    <% end %>
+    
+    <p></p>
+</div>
+<div>
+    <form action='/<%= @the_user.id %>/comment' method='post'>
+        <input type="text" name="comment">
+        <input type="submit" value="コメント" class="right-button">
+    </form>
+    
+</div>

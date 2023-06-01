@@ -1,0 +1,23 @@
+:root{
+    --main-1: #3494E6;
+    --main-2: #EC6EAD;
+    --main-white: #f3f3f3;
+}
+
+
+.menu{
+  position: fixed;  
+}
+
+ul{
+    float: right;
+}
+li{
+    list-style: none;
+}
+
+li a{
+    color: var(--main-white);
+    text-decoration: none;
+    display: block;
+}

@@ -1,0 +1,15 @@
+:root{
+    --main-1: #3494E6;
+    --main-2: #EC6EAD;
+    --main-white: #f3f3f3;
+}
+
+
+html,body{
+  overflow: hidden
+}
+
+
+#input_time{
+    width: 30vw;
+}

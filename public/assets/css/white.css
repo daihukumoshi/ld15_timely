@@ -1,0 +1,46 @@
+:root{
+    --main-1: #3494E6;
+    --main-3: #D04475;
+    --main-white: #f3f3f3;
+}
+
+body{
+    background: white;
+    width: 100vw;
+    height: 100vh;
+}
+
+h1{
+   color: var(--main-3);  
+}
+a{
+    color: var(--main-3);
+    display: inline-block;
+    width: 15vw;
+}
+
+.task{
+    text-align: left;
+}
+form{
+    display: inline-block;
+}
+
+.above_button{
+    margin: 1vh auto;
+}
+.right-button{
+    border: none;
+    background: var(--main-3);
+    color: var(--main-white);
+}
+
+.bottom{
+    position: absolute;
+    bottom: 2vh;
+}
+
+.content{
+    margin: 2vh 5vw;
+}
+

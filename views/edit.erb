@@ -1,0 +1,14 @@
+<div>
+    <a>タスク編集</a>
+    <div>
+        <% @task_id %>
+        <form action='/task/<%= @task_id %>/edit' method='post'>
+            <input type="text" value="<%= Task.find(@task_id).task_name %>" name="task_name">
+            <input type="text" value="<%= Task.find(@task_id).minutes %>" name="minutes">
+            <input type="submit" value="編集">
+        </form>
+        <form action='/task/<%= @task_id %>/delete' method='post'>
+            <input type="submit" value="削除">
+        </form>
+    </div>
+</div>

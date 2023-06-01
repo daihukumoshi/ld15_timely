@@ -1,0 +1,89 @@
+<div>
+    <p>タスク状況</p>
+    <div>
+        <!--each回す-->
+        <% tasks_list = Task.where(user_id: session[:user]) %>
+        <% tasks_list.each do |task_list| %>
+        <div>
+            <a><%= task_list.task_name %></a>
+            <a><%= task_list.minutes %></a>
+            <!--Doneを押したらチェックに変更したい-->
+            <% if Status.find_by(user_id: session[:user], task_id: task_list.id) %>
+                <form action='/prep/<%= task_list.id %>/clear' method='post'>
+                    <input type="submit" value="✔️">
+                </form>
+            <% else %>
+                <form action='/prep/<%= task_list.id %>/done' method='post'>
+                    <input type="submit" value="Done">
+                </form>
+            <% end %>
+        </div>
+        <% end %>
+    </div>
+</div>
+<div>
+    <% sum = 0 %>
+    <% tasks = Task.where(user_id: session[:user]) %>
+    <% for task in tasks do %>
+        <% sum = sum + task.minutes %>
+    <% end %>
+    
+    <% tasks_done = Status.where(user_id: session[:user]) %>
+    <% for task_done in tasks_done %>
+        <% tasks_done_minutes = Task.where(id: task_done.task_id) %>
+        <% for task_done_minutes in tasks_done_minutes %>
+            <% sum = sum - task_done_minutes.minutes %>
+        <% end %>
+    <% end %>
+    
+    <% need_hour = sum / 60 %>
+    <% need_minutes = sum % 60 %>
+    
+    <!--現在時刻の表示-->
+    <script type="text/javascript">
+        function twoDigit(num) {
+            let ret;
+            if( num < 10 ) 
+            ret = "0" + num; 
+            else 
+            ret = num; 
+            return ret;
+        }
+        function showTime() {
+            var now = new Date();
+            var nowhour = twoDigit( now.getHours() );
+            var nowminutes = twoDigit( now.getMinutes() );
+            var nowseconds = twoDigit( now.getSeconds() );
+            
+            let msg = "現在時刻：" + nowhour + ":" + nowminutes ;
+            document.getElementById("timenow").innerHTML = msg;
+         }
+         setInterval('showTime()',1000);
+    </script>
+    <p id="timenow"></p>
+    <!--出発推定時刻の表示-->
+    <% time = Time.now %>
+    <p>出発推定時刻　<%= time.hour.to_i + 9 + need_hour.to_i %>:<%= time.min.to_i + need_minutes.to_i %></p>
+    <!-- 所要時間が入力されていたら表示-->
+    <% if Need.find_by(user_id: session[:user]).present? %>
+        <% required_array = Need.find_by(user_id: session[:user]).needtime.split(":") %>
+        <% required_hour = required_array[0] %>
+        <% required_minute = required_array[1] %>
+        <p>到着推定時刻　<%= time.hour.to_i + 9 + required_hour.to_i %>:<%= time.min.to_i + required_minute.to_i %></p>
+    <% end %>
+</div>
+<div>
+    <p>コメント</p>
+    <% Comment.where(user_id: session[:user]).each do |comment|%>
+    <div>
+        <p><%= comment.time %></p>
+        <p><%= comment.comment %></p>
+        <p><%= User.find(comment.commenter_id).display_name %></p>
+    </div>
+    <% end %>
+</div>
+<form action='/prep/fin' method='post'>
+    <input type='submit' value="出発">
+</form>
+
+<!--分数60超える問題なんとかしよ-->

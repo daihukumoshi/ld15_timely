@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/assets/css/white.css">
+<div class="content">
+    <h1>タスク一覧</h1>
+    <div>
+        <% if Task.where(user_id: session[:user]).count != 0 %>
+            <% Task.where(user_id: session[:user]).each do |task| %>
+                <div class="task">
+                    <a><%= task.task_name %></a>
+                    <a><%= task.minutes %></a>
+                    <form action='/task/<%= task.id %>/edit' method='get'>
+                        <input type="submit" value="編集" class="above_button right-button">
+                    </form>
+                    <form action='/task/<%= task.id %>/delete' method='post'>
+                        <input type="submit" value="削除" class="above_button right-button">
+                    </form>
+                </div>
+            <% end %>
+        <% end %>
+        
+        <% if Task.where(user_id: session[:user]).count == 0 %>
+            <p>タスクを追加してください</p>
+        <% else %>
+            <% total = 0 %>
+            <% for task in Task.where(user_id: session[:user]) %>
+                <% total = total + task.minutes %>
+            <% end %>
+            <% hours = total / 60 %>
+            <% minutes = total % 60 %>
+            <p>所要時間 <%= hours %>:<%= minutes %></p>
+        <% end %>
+        
+    </div>
+    
+    <div class="bottom">
+        <form action='/task/add' method='post'>
+            <input type="text" name="task_name">
+            <input type="text" name="minutes">
+            <!--分は数字でバリデーション必要,requireも-->
+            <input type="submit" value="追加" class="right-button">
+        </form>
+    </div>
+</div>
