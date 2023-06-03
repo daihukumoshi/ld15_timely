@@ -105,8 +105,10 @@ get '/prep' do
         redirect '/task'
     else
         if params[:required_time]
-            Need.create(user_id: session[:user], needtime: params[:required_time])
+            Need.create(user_id: session[:user], needtime: params[:required_time], pushtime: Time.now)
         end
+        
+        @leave = 1;
         erb :mypage
     end
 end
@@ -138,6 +140,9 @@ post '/prep/fin' do
     if Comment.find_by(user_id: session[:user]).present?
         Comment.where(user_id: session[:user]).destroy_all
     end
+    
+    @leave = nil;
+    
     redirect '/'
 end
 

@@ -1,22 +1,24 @@
 <link rel="stylesheet" href="/assets/css/white.css">
+<div class="whole">
 <div class="content">
     <h1>タスク一覧</h1>
     <div>
         <% if Task.where(user_id: session[:user]).count != 0 %>
             <% Task.where(user_id: session[:user]).each do |task| %>
                 <div class="task">
-                    <a><%= task.task_name %></a>
-                    <a><%= task.minutes %></a>
+                    <a class="input_task"><%= task.task_name %></a>
+                    <a class="input_minutes"><%= task.minutes %></a>
                     <form action='/task/<%= task.id %>/edit' method='get'>
-                        <input type="submit" value="編集" class="above_button right-button">
+                        <input type="submit" value="編集" class="above_button button">
                     </form>
                     <form action='/task/<%= task.id %>/delete' method='post'>
-                        <input type="submit" value="削除" class="above_button right-button">
+                        <input type="submit" value="削除" class="button">
                     </form>
                 </div>
             <% end %>
         <% end %>
         
+        <div id="total">
         <% if Task.where(user_id: session[:user]).count == 0 %>
             <p>タスクを追加してください</p>
         <% else %>
@@ -28,15 +30,16 @@
             <% minutes = total % 60 %>
             <p>所要時間 <%= hours %>:<%= minutes %></p>
         <% end %>
-        
+        </div>
     </div>
     
     <div class="bottom">
         <form action='/task/add' method='post'>
-            <input type="text" name="task_name">
-            <input type="text" name="minutes">
+            <input type="text" name="task_name" id="task_name" placeholder="タスク名" required>
+            <input type="number" name="minutes" id="minutes" placeholder="分" required>
             <!--分は数字でバリデーション必要,requireも-->
-            <input type="submit" value="追加" class="right-button">
+            <input type="submit" value="追加" class="button">
         </form>
     </div>
+</div>
 </div>

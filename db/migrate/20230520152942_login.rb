@@ -32,6 +32,7 @@ class Login < ActiveRecord::Migration[6.1]
     create_table :needs do |t|
         t.integer :user_id
         t.string :needtime
+        t.datetime :pushtime
     end
   end
 end

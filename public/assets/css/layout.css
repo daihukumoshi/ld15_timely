@@ -3,21 +3,50 @@
     --main-2: #EC6EAD;
     --main-white: #f3f3f3;
 }
-
-
-.menu{
-  position: fixed;  
-}
-
-ul{
-    float: right;
-}
 li{
     list-style: none;
+}
+
+html,body{
+  overflow: hidden;
+  position: relative;
 }
 
 li a{
     color: var(--main-white);
     text-decoration: none;
     display: block;
+}
+nav {
+  padding: 0;
+  position: absolute;
+  bottom: 1vh;
+  z-index: 1;
+}
+
+.nav-link {
+  color: #000;
+}
+span {
+  text-align: center;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  color: #dcdcdc;
+}
+
+.navbar-toggler {
+  outline: none;
+}
+
+#navbarNav{
+  background: rgba(243, 243, 243, 0.8);
+}
+
+.nav-item{
+  padding: 5vw;
+  width: 100vw;
+}
+
+.navbar-toggler{
+  width: 100vw;
 }

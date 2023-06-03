@@ -1,26 +1,27 @@
 <link rel="stylesheet" href="/assets/css/white.css">
+<div class="whole">
 <div>
     <p><%= @the_user.display_name %>さんのタスク状況</p>
     
     <% if Friend.where(following_id: session[:user], followed_id: @the_user.id).blank? %>
         <form action='/<%= @the_user.id %>/follow' method='post'>
-            <input type="submit" value="フォローする" class="right-button">
+            <input type="submit" value="フォローする" class="prfbutton">
         </form>
     <% else %>
         <form action='/<%= @the_user.id %>/unfollow' method='post'>
-            <input type="submit" value="フォローをやめる" class="right-button">
+            <input type="submit" value="フォローをやめる" class="prfbutton">
         </form>
     <% end %>
     <!--重複回避しなきゃまずい-->
 </div>
 
-<div>
+<div class="task_box">
     <!--タスク取得してeach回す-->
     <% tasks = Task.where(user_id: @the_user.id) %>
     <% tasks.each do |task|%>
         <div>
-            <a><%= task.task_name %></a>
-            <a><%= task.minutes %></a>
+            <a class="input_task"><%= task.task_name %></a>
+            <a class="input_minutes"><%= task.minutes %></a>
             <% if Status.where(task_id: task.id, user_id: @the_user.id).nil? %>
                 <a>Done</a>
             <% else %>
@@ -31,41 +32,68 @@
     
 </div>
 
-<div>
-    <% sum = 0%>
-    <% tasks = Task.where(user_id: @the_user.id) %>
-    <% for task in tasks do %>
-        <% sum = sum + task.minutes %>
-    <% end %>
-    
-    <% tasks_done = Status.where(user_id: @the_user.id) %>
-    <% for task_done in tasks_done %>
-        <% tasks_done_minutes = Task.where(id: task_done.task_id) %>
-        <% for task_done_minutes in tasks_done_minutes %>
-            <% sum = sum - task_done_minutes.minutes %>
+<div class="user_box">
+    <% if Need.where(user_id: @the_user.id).nil? or Need.where(user_id: @the_user.id).empty? %>
+        <p>まだ準備開始していません</p>
+    <% else %>
+        <% dt = Need.where(user_id: @the_user.id).last.pushtime %>
+        <p>直近の準備開始時刻　　<%= dt.mon %>/<%= dt.day %>　<%= dt.hour.to_i + 9 %>:<%=dt.min %></p>
+        
+        
+        <!--Helperに書き換えます-->
+        <% sum = 0%>
+        <% tasks = Task.where(user_id: @the_user.id) %>
+        <% for task in tasks do %>
+            <% sum = sum + task.minutes %>
         <% end %>
+    
+        <% tasks_done = Status.where(user_id: @the_user.id) %>
+        <% for task_done in tasks_done %>
+            <% tasks_done_minutes = Task.where(id: task_done.task_id) %>
+            <% for task_done_minutes in tasks_done_minutes %>
+                <% sum = sum - task_done_minutes.minutes %>
+            <% end %>
+        <% end %>
+        
+        <% the_time = Need.where(user_id: @the_user.id).last.pushtime.to_time %>
+        
+        <% need_hour = sum / 60 + the_time.hour.to_i + 9%>
+        <% need_minutes = (sum + the_time.hour.to_i) % 60 %>
+        
+        <% if need_minutes > 60 %>
+            <% over = need_minutes / 60 %>
+            <% need_minutes = need_minutes % 60 %>
+            <% need_hour = need_hour + over %>
+        <% end %>
+    
+        <% if need_hour > 24 %>
+            <% need_hour = need_hour % 24 %>
+        <% end %>
+
+        <p>出発推定時刻　<%= need_hour.to_i %>:<%= need_minutes.to_i %></p>
+    
+            <% required_array = Need.where(user_id: @the_user.id).last.needtime.split(":") %>
+            <% required_hour = need_hour + required_array[0].to_i %>
+            <% required_minute = need_minutes + required_array[1].to_i %>
+        
+            <% if required_minute > 60 %>
+                <% over = required_minute / 60 %>
+                <% required_minute = required_minute % 60 %>
+                <% required_hour = required_hour + over %>
+            <% end %>
+        
+            <% if required_hour > 24 %>
+                <% required_hour = required_hour % 24 %>
+            <% end %>
+            <p>到着推定時刻　<%= required_hour.to_i %>:<%= required_minute.to_i %></p>
+
     <% end %>
-    
-    
-    <% need_hour = sum / 60 %>
-    <% need_minutes = sum % 60 %>
-    
-    <% time = Time.now %>
-    <p>出発推定時刻　<%= time.hour.to_i + 9 + need_hour.to_i %>:<%= time.min.to_i + need_minutes.to_i %></p>
-    
-    <% if Need.find_by(user_id: @the_user.id).present? %>
-        <% required_array = Need.find_by(user_id: @the_user.id).needtime.split(":") %>
-        <% required_hour = required_array[0] %>
-        <% required_minute = required_array[1] %>
-        <p>到着推定時刻　<%= time.hour.to_i + 9 + required_hour.to_i %>:<%= time.min.to_i + required_minute.to_i %></p>
-    <% end %>
-    
-    <p></p>
 </div>
 <div>
     <form action='/<%= @the_user.id %>/comment' method='post'>
-        <input type="text" name="comment">
-        <input type="submit" value="コメント" class="right-button">
+        <input type="text" name="comment" id="comment">
+        <input type="submit" value="コメント" class="prfbutton">
     </form>
     
+</div>
 </div>

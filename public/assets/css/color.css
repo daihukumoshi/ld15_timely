@@ -9,13 +9,14 @@ body{
     background: linear-gradient(45deg, var(--main-1), var(--main-2));
     width: 100vw;
     height: 100vh;
-    text-align: center;
 }
 
 .whole{
     width: 100%;
     height: 100%;
-    margin-top: 20vh;
+    margin-top: 30vh;
+    text-align: center;
+    padding: 5vw;
 }
 
 label{

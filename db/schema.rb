@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 2023_05_20_152942) do
   create_table "needs", force: :cascade do |t|
     t.integer "user_id"
     t.string "needtime"
+    t.datetime "pushtime"
   end
 
   create_table "statuses", force: :cascade do |t|
