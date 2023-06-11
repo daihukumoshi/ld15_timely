@@ -38,7 +38,12 @@ get '/signup' do
 end
 
 post "/signup" do
-    user = User.create(user_name: params[:username], password: params[:password], password_confirmation: params[:password_confirmation], display_name: params[:display_name])
+    if User.find_by(user_name: params[:username])
+        redirect '/signup'
+    else
+        user = User.create(user_name: params[:username], password: params[:password], password_confirmation: params[:password_confirmation], display_name: params[:display_name])
+    end
+    
     if user.persisted?
         session[:user] = user.id
         redirect '/'
@@ -133,9 +138,10 @@ end
 
 post '/prep/fin' do
     Status.where(user_id: session[:user]).destroy_all
-    if Need.find_by(user_id: session[:user]).present?
-        Need.destroy(Need.find_by(user_id: session[:user]).id)
-    end
+    #if Need.find_by(user_id: session[:user]).present?
+        Need.where(user_id: session[:user]).destroy_all
+        #Need.destroy(Need.find_by(user_id: session[:user]).id)
+    #end
     
     if Comment.find_by(user_id: session[:user]).present?
         Comment.where(user_id: session[:user]).destroy_all
@@ -165,8 +171,7 @@ post '/:user_id/comment' do
     Comment.create(user_id: params[:user_id], commenter_id: session[:user], comment: params[:comment], time: Time.now)
     @the_user = User.find(params[:user_id])
     erb :profile
-    #日本時間にする
 end
 
-#これsession[:user].nil?で判定してたらURL書き換えたら他人のいじれちゃうくないkunaikamo
-#「出発」押してなければ出発前表示、押してたら予定時刻表示に切り替える=>テーブルもう一個いる？増えすぎちゃう？涙
+
+#アカウント登録重複ないように

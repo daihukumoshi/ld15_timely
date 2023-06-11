@@ -77,7 +77,12 @@
         <% @leave_hour = @leave_hour % 24 %>
     <% end %>
     
-    <p>出発推定時刻　<%= @leave_hour.to_i %>:<%= @leave_min.to_i %></p>
+    <% disp_min = @leave_min.to_s %>
+    <% if @leave_min < 10 %>
+        <% disp_min = "0" + disp_min %>
+    <% end %>
+
+    <p>出発推定時刻　<%= @leave_hour.to_i %>:<%= disp_min %></p>
     
 
     <!-- 所要時間が入力されていたら表示-->
@@ -99,27 +104,31 @@
             <% arrive_hour = arrive_hour % 24 %>
         <% end %>
     
-        <p>到着推定時刻　<%= arrive_hour.to_i %>:<%= arrive_min.to_i %></p>
+        <% disp_min_arrive = arrive_min.to_s %>
+        <% if arrive_min < 10 %>
+            <% disp_min_arrive = "0" + disp_min_arrive %>
+        <% end %>
+        <p>到着推定時刻　<%= arrive_hour.to_i %>:<%= disp_min_arrive %></p>
     <% end %>
 </div>
 <div class="comment_box">
-    <p>コメント</p>
+    <h3>コメント</h3>
     <% Comment.where(user_id: session[:user]).each do |comment|%>
-    <div>
-        <p><%= comment.time %></p>
+    <div class="comm">
+        <p class="comment_text"><%= User.find(comment.commenter_id).display_name %>　　　　　<%= comment.time.mon %>/<%= comment.time.day %>　<%= comment.time.hour.to_i + 9 %>:<%= comment.time.min %></p>
         <p><%= comment.comment %></p>
-        <p><%= User.find(comment.commenter_id).display_name %></p>
     </div>
     <% end %>
 </div>
 
+<div id="bottom2">
 <form action='/prep/fin' method='post' class="go">
     <input type='submit' value="出発" class="button go">
 </form>
 <form action='/prep/fin' method='post' class="go">
     <input type='submit' value="準備に戻る" class="button go">
 </form>
-
+</div>
 </div>
 
 <!--find_by使ってるから複数登録されちゃうとまずい-->

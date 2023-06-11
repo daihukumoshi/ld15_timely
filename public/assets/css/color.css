@@ -1,7 +1,10 @@
 :root{
     --main-1: #3494E6;
     --main-2: #EC6EAD;
-    --main-white: #f3f3f3;
+    --main-3: #D04475;
+    --main-white: #ffffff;
+    --main-gray: #98989c;
+    --main-black: #333333;
 }
 
 
@@ -22,6 +25,10 @@ body{
 label{
     display: block;
     color: white;
+    font-family: 'Noto Sans JP', sans-serif;
+}
+input{
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
 .transparent-button{
@@ -36,9 +43,31 @@ label{
 }
 
 .semitransparent-button{
-    background: var(--main-white);
-    opacity: 0.2;
+    display: block;
+    margin: 3vh auto;
+    padding: 0.5vh 0;
+    width: 80vw;
+    border-radius:5px;
+    border: none;
+    background: rgba(226,230,233,0.3);
+    color: rgba(226,230,233,0.6);
 }
+
+input.semitransparent-button{
+    padding-left: 2vw;
+}
+
+
+::placeholder{
+    color: rgba(226,230,233,0.5);
+}
+
+
+input:focus {
+    outline: 0 transparent solid;
+}
+
+
 
 #time{
     width: 30vw;
@@ -48,4 +77,5 @@ label{
 a{
     color: var(--main-white);
     text-decoration: none;
+    font-family: 'Noto Sans JP', sans-serif;
 }

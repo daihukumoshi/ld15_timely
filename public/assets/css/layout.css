@@ -1,21 +1,51 @@
 :root{
     --main-1: #3494E6;
     --main-2: #EC6EAD;
-    --main-white: #f3f3f3;
+    --main-3: #D04475;
+    --main-white: #ffffff;
+    --main-gray: #98989c;
+    --main-black: #333333;
 }
+body{
+  overflow-y: scroll;
+  overflow-x: hidden !important;
+}
+
+input{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--main-black);
+}
+h1{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--main-black);
+}
+h3{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--main-black);
+}
+h4{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--main-black);
+}
+a{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--main-black);
+}
+p{
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--main-black);
+}
+
 li{
     list-style: none;
 }
 
-html,body{
-  overflow: hidden;
-  position: relative;
-}
 
 li a{
     color: var(--main-white);
     text-decoration: none;
     display: block;
+    
 }
 nav {
   padding: 0;
@@ -25,17 +55,23 @@ nav {
 }
 
 .nav-link {
-  color: #000;
+  color: var(--main-black);
+  font-family: 'Noto Sans JP', sans-serif;
 }
 span {
   text-align: center;
   letter-spacing: 0.15em;
   font-size: 10px;
-  color: #dcdcdc;
 }
 
 .navbar-toggler {
   outline: none;
+  width: 100vw;
+}
+
+button:focus {
+  outline: 0 transparent solid;
+  background-color: rgba(243, 243, 243, 0.8);
 }
 
 #navbarNav{
@@ -47,6 +83,4 @@ span {
   width: 100vw;
 }
 
-.navbar-toggler{
-  width: 100vw;
-}
+

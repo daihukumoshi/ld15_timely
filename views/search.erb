@@ -2,8 +2,8 @@
 <div class="whole">
     <div class="content">
     <h1>ユーザー検索</h1>
-    <form action='/search' method='post'>
-        <input type="text" name="search_name" id="user_name">
+    <form action='/search' method='post' id="notfound">
+        <input type="text" name="search_name" id="user_name" placeholder="usernameまたはアカウント名">
         <input type="submit" value="検索" class="button">
     </form>
     
@@ -12,20 +12,27 @@
             <p>ユーザーIDが見つかりません</p>
         <% else %>
             <% @results.each do |result| %>
+            <div class="follow">
+                <a href="/search/<%= result.id %>" class="link"></a>
+                <h4 href="/search/<%= result.id %>"><%= result.display_name %></h4>
                 <a href="/search/<%= result.id %>"><%= result.user_name %></a>
-                <a href="/search/<%= result.id %>"><%= result.display_name %></a>
+            </div>
             <% end %>
         <% end %>
     </div>
     <div id="follow" class="comment_box">
         <h3>フォロー中</h3>
         <!-- フォローしている人のuser_idの配列をfollowingsに代入-->
-        <% if @follows.nil? or @follows.blank? %>
+        <% if Friend.find_by(following_id: session[:user]).nil? %>
             <p>フォロー中のユーザーはいません</p>
         <% else %>
-            <% @follows.each do |follow|%>
-                <a href="/search/<%= User.find(Friend.find(friend.id).follow_id).user_name %>"><%= User.find(Friend.find(friend.id).follow_id).user_name %></a>
-                <a href="/search/<%= User.find(Friend.find(friend.id).follow_id).user_name %>"><%= User.find(Friend.find(friend.id).follow_id).display_name %></a>
+            <% followings = Friend.where(following_id: session[:user])%>
+            <% followings.each do |follow|%>
+            <div class="follow" >
+                <a href="/search/<%= follow.followed_id %>" class="link"></a> 
+                <h4 href="/search/<%= follow.followed_id %>"><%= User.find(follow.followed_id).display_name %></h4>
+                <a href="/search/<%= follow.followed_id %>"><%= User.find(follow.followed_id).user_name %></a>
+            </div>
             <% end %>
         <% end %>
     </div>

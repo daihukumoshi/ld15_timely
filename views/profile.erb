@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="/assets/css/white.css">
 <div class="whole">
 <div>
-    <p><%= @the_user.display_name %>さんのタスク状況</p>
+    <h1><%= @the_user.display_name %>さんのタスク状況</h1>
     
-    <% if Friend.where(following_id: session[:user], followed_id: @the_user.id).blank? %>
-        <form action='/<%= @the_user.id %>/follow' method='post'>
-            <input type="submit" value="フォローする" class="prfbutton">
-        </form>
-    <% else %>
+    <% if Friend.find_by(following_id: session[:user], followed_id: @the_user.id) %>
         <form action='/<%= @the_user.id %>/unfollow' method='post'>
             <input type="submit" value="フォローをやめる" class="prfbutton">
+        </form>
+    <% else %>
+        <form action='/<%= @the_user.id %>/follow' method='post'>
+            <input type="submit" value="フォローする" class="prfbutton">
         </form>
     <% end %>
     <!--重複回避しなきゃまずい-->
@@ -22,17 +22,17 @@
         <div>
             <a class="input_task"><%= task.task_name %></a>
             <a class="input_minutes"><%= task.minutes %></a>
-            <% if Status.where(task_id: task.id, user_id: @the_user.id).nil? %>
-                <a>Done</a>
+            <% if Status.find_by(task_id: task.id, user_id: @the_user.id).nil? %>
+                <a class="sta sta1">will</a>
             <% else %>
-                <a>Will</a>
+                <a class="sta">done</a>
             <% end %>
         </div>
     <% end %>
     
 </div>
 
-<div class="user_box">
+<div id="time_box">
     <% if Need.where(user_id: @the_user.id).nil? or Need.where(user_id: @the_user.id).empty? %>
         <p>まだ準備開始していません</p>
     <% else %>
@@ -89,9 +89,9 @@
 
     <% end %>
 </div>
-<div>
+<div id="comment_input">
     <form action='/<%= @the_user.id %>/comment' method='post'>
-        <input type="text" name="comment" id="comment">
+        <input type="text" name="comment" id="comment" placeholder="コメントを入力">
         <input type="submit" value="コメント" class="prfbutton">
     </form>
     
