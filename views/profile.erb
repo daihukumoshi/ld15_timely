@@ -2,7 +2,7 @@
 <div class="whole">
 <div>
     <h1><%= @the_user.display_name %>さんのタスク状況</h1>
-    
+
     <% if Friend.find_by(following_id: session[:user], followed_id: @the_user.id) %>
         <form action='/<%= @the_user.id %>/unfollow' method='post'>
             <input type="submit" value="フォローをやめる" class="prfbutton">

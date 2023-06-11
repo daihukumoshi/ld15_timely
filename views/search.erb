@@ -26,12 +26,11 @@
         <% if Friend.find_by(following_id: session[:user]).nil? %>
             <p>フォロー中のユーザーはいません</p>
         <% else %>
-            <% followings = Friend.where(following_id: session[:user])%>
-            <% followings.each do |follow|%>
+            <% User.find(session[:user]).followeds.each do |follow|%>
             <div class="follow" >
-                <a href="/search/<%= follow.followed_id %>" class="link"></a> 
-                <h4 href="/search/<%= follow.followed_id %>"><%= User.find(follow.followed_id).display_name %></h4>
-                <a href="/search/<%= follow.followed_id %>"><%= User.find(follow.followed_id).user_name %></a>
+                <a href="/search/<%= follow.id %>" class="link"></a> 
+                <h4 href="/search/<%= follow.id %>"><%= follow.display_name %></h4>
+                <a href="/search/<%= follow.id %>"><%= follow.user_name %></a>
             </div>
             <% end %>
         <% end %>
