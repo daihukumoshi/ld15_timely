@@ -24,23 +24,7 @@
     </div>
 </div>
 <div class="time">
-    <% sum = 0 %>
-    <% tasks = Task.where(user_id: session[:user]) %>
-    <% for task in tasks do %>
-        <% sum = sum + task.minutes %>
-    <% end %>
-    
-    <% tasks_done = Status.where(user_id: session[:user]) %>
-    <% for task_done in tasks_done %>
-        <% tasks_done_minutes = Task.where(id: task_done.task_id) %>
-        <% for task_done_minutes in tasks_done_minutes %>
-            <% sum = sum - task_done_minutes.minutes %>
-        <% end %>
-    <% end %>
-    
-    <% need_hour = sum / 60 %>
-    <% need_minutes = sum % 60 %>
-    
+   
     <!--現在時刻の表示-->
     <script type="text/javascript">
         function twoDigit(num) {
@@ -63,53 +47,10 @@
          setInterval('showTime()',1000);
     </script>
     <p id="timenow"></p>
-    <!--出発推定時刻の表示-->
-    <% time = Time.now %>
-    <% @leave_hour = time.hour.to_i + 9 + need_hour.to_i %>
-    <% @leave_min = time.min.to_i + need_minutes.to_i %>
-    <% if @leave_min > 60 %>
-        <% over = @leave_min / 60 %>
-        <% @leave_min = @leave_min % 60 %>
-        <% @leave_hour = @leave_hour + over %>
-    <% end %>
-    
-    <% if @leave_hour > 24 %>
-        <% @leave_hour = @leave_hour % 24 %>
-    <% end %>
-    
-    <% disp_min = @leave_min.to_s %>
-    <% if @leave_min < 10 %>
-        <% disp_min = "0" + disp_min %>
-    <% end %>
 
-    <p>出発推定時刻　<%= @leave_hour.to_i %>:<%= disp_min %></p>
-    
+    <p>出発推定時刻　<%= time_arrivehour session[:user] %></p>
+    <p>到着推定時刻　<%= time_depart session[:user] %></p>
 
-    <!-- 所要時間が入力されていたら表示-->
-    <% if Need.find_by(user_id: session[:user]).present? %>
-        <% required_array = Need.where(user_id: session[:user]).last.needtime.split(":") %>
-        <% required_hour = required_array[0] %>
-        <% required_minute = required_array[1] %>
-        
-        <% arrive_hour = @leave_hour.to_i + required_hour.to_i %>
-        <% arrive_min = @leave_min.to_i + required_minute.to_i %>
-        
-        <% if arrive_min > 60 %>
-            <% over = arrive_min / 60 %>
-            <% arrive_min = arrive_min % 60 %>
-            <% arrive_hour = arrive_hour + over %>
-        <% end %>
-        
-        <% if arrive_hour > 24 %>
-            <% arrive_hour = arrive_hour % 24 %>
-        <% end %>
-    
-        <% disp_min_arrive = arrive_min.to_s %>
-        <% if arrive_min < 10 %>
-            <% disp_min_arrive = "0" + disp_min_arrive %>
-        <% end %>
-        <p>到着推定時刻　<%= arrive_hour.to_i %>:<%= disp_min_arrive %></p>
-    <% end %>
 </div>
 <div class="comment_box">
     <h3>コメント</h3>

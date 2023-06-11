@@ -173,5 +173,75 @@ post '/:user_id/comment' do
     erb :profile
 end
 
+helpers do
+    def time_arrivehour current_id
+        sum = 0
+        tasks = Task.where(user_id: current_id)
+        for task in tasks do
+            sum = sum + task.minutes
+        end
+        tasks_done = Status.where(user_id: current_id) 
+        for task_done in tasks_done
+            tasks_done_minutes = Task.where(id: task_done.task_id)
+            for task_done_minutes in tasks_done_minutes
+                sum = sum - task_done_minutes.minutes
+            end
+        end
+        need_hour = sum / 60
+        need_minutes = sum % 60
+        
+        
+            
+        time = Time.now
+        @leave_hour = time.hour.to_i + 9 + need_hour.to_i
+        @leave_min = time.min.to_i + need_minutes.to_i
+        if @leave_min > 60
+            over = @leave_min / 60
+            @leave_min = @leave_min % 60
+            @leave_hour = @leave_hour + over
+        end
+        
+        if @leave_hour > 24
+            @leave_hour = @leave_hour % 24
+        end
+        
+        disp_min = @leave_min.to_s
+        if @leave_min < 10
+            disp_min = "0" + disp_min
+        end
+        
+        return "#{@leave_hour.to_i}:#{disp_min}"
+    end
+    
+    
+    def time_depart current_id
+        if Need.find_by(user_id: current_id).present?
+            required_array = Need.where(user_id: current_id).last.needtime.split(":") 
+            required_hour = required_array[0]
+            required_minute = required_array[1]
+        
+            arrive_hour = @leave_hour.to_i + required_hour.to_i
+            arrive_min = @leave_min.to_i + required_minute.to_i
+        
+            if arrive_min > 60
+                over = arrive_min / 60 
+                arrive_min = arrive_min % 60 
+                arrive_hour = arrive_hour + over 
+            end 
+        
+            if arrive_hour > 24
+                arrive_hour = arrive_hour % 24 
+            end
+    
+            disp_min_arrive = arrive_min.to_s 
+            if arrive_min < 10
+                disp_min_arrive = "0" + disp_min_arrive 
+            end 
+            
+            return "#{arrive_hour.to_i}:#{disp_min_arrive}"
+        end
+    end
+end
+
 
 #アカウント登録重複ないように

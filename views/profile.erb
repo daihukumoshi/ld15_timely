@@ -39,53 +39,8 @@
         <% dt = Need.where(user_id: @the_user.id).last.pushtime %>
         <p>直近の準備開始時刻　　<%= dt.mon %>/<%= dt.day %>　<%= dt.hour.to_i + 9 %>:<%=dt.min %></p>
         
-        
-        <!--Helperに書き換えます-->
-        <% sum = 0%>
-        <% tasks = Task.where(user_id: @the_user.id) %>
-        <% for task in tasks do %>
-            <% sum = sum + task.minutes %>
-        <% end %>
-    
-        <% tasks_done = Status.where(user_id: @the_user.id) %>
-        <% for task_done in tasks_done %>
-            <% tasks_done_minutes = Task.where(id: task_done.task_id) %>
-            <% for task_done_minutes in tasks_done_minutes %>
-                <% sum = sum - task_done_minutes.minutes %>
-            <% end %>
-        <% end %>
-        
-        <% the_time = Need.where(user_id: @the_user.id).last.pushtime.to_time %>
-        
-        <% need_hour = sum / 60 + the_time.hour.to_i + 9%>
-        <% need_minutes = (sum + the_time.hour.to_i) % 60 %>
-        
-        <% if need_minutes > 60 %>
-            <% over = need_minutes / 60 %>
-            <% need_minutes = need_minutes % 60 %>
-            <% need_hour = need_hour + over %>
-        <% end %>
-    
-        <% if need_hour > 24 %>
-            <% need_hour = need_hour % 24 %>
-        <% end %>
-
-        <p>出発推定時刻　<%= need_hour.to_i %>:<%= need_minutes.to_i %></p>
-    
-            <% required_array = Need.where(user_id: @the_user.id).last.needtime.split(":") %>
-            <% required_hour = need_hour + required_array[0].to_i %>
-            <% required_minute = need_minutes + required_array[1].to_i %>
-        
-            <% if required_minute > 60 %>
-                <% over = required_minute / 60 %>
-                <% required_minute = required_minute % 60 %>
-                <% required_hour = required_hour + over %>
-            <% end %>
-        
-            <% if required_hour > 24 %>
-                <% required_hour = required_hour % 24 %>
-            <% end %>
-            <p>到着推定時刻　<%= required_hour.to_i %>:<%= required_minute.to_i %></p>
+        <p>出発推定時刻　<%= time_arrivehour @the_user.id %></p>
+        <p>到着推定時刻　<%= time_depart @the_user.id %></p>
 
     <% end %>
 </div>
