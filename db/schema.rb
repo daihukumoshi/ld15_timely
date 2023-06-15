@@ -19,7 +19,9 @@ ActiveRecord::Schema.define(version: 2023_05_20_152942) do
     t.integer "user_id"
     t.integer "commenter_id"
     t.string "comment"
+    t.string "img"
     t.datetime "time"
+    t.boolean "reaction"
   end
 
   create_table "friends", force: :cascade do |t|

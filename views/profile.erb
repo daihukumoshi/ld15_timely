@@ -44,11 +44,71 @@
 
     <% end %>
 </div>
-<div id="comment_input">
-    <form action='/<%= @the_user.id %>/comment' method='post'>
-        <input type="text" name="comment" id="comment" placeholder="コメントを入力">
-        <input type="submit" value="コメント" class="prfbutton">
-    </form>
-    
+
+<div class="comment_box">
+    <h3>コメント</h3>
+    <% Comment.where(user_id: @the_user.id).each do |comment|%>
+    <div class="comm">
+        <% hour = comment.time.hour.to_i + 9 %>
+        <% if hour > 24 %>
+            <% hour = hour % 24 %>
+        <% end %>
+        <% min = comment.time.min %>
+        <% if min < 10 %>
+            <% min = "0" + min.to_s %>
+        <% end %>
+        
+        <p class="comment_text"><%= User.find(comment.commenter_id).display_name %>　　　　　<%= comment.time.mon %>/<%= comment.time.day %>　<%= hour %>:<%= min %></p>
+        <% unless comment.comment.empty? %>
+            <div class="says">
+                <p><%= comment.comment %></p>
+            </div>
+        <% end %>
+        
+        <% if comment.reaction==true %>
+            <img src="/assets/images/heart2.png" class="mini">
+        <% else %>
+            <img src="/assets/images/heart1.png" class="mini">
+        <% end %>
+        
+        <% unless comment.img.empty? %>
+            <img src="<%= comment.img %>" class="photo">
+        <% end %>
+    </div>
+    <% end %>
 </div>
+
+
+
+
+<div id="comment_input">
+    <form action='/<%= @the_user.id %>/comment' method='post' enctype="multipart/form-data">
+        <input type="text" name="comment" id="comment" placeholder="コメントを入力">
+        <label for="fileElem"><img src="/assets/images/send_picture.png" class="com"></label>
+        <input type="file" name="file" id="fileElem" accept="image/png, image/jpeg" style="display:none" onChange="imgPreView(event)">
+        <input type="image" src="/assets/images/send_icon.png" class="com" id="send">
+    </form>
+
+</div>
+    <div id="preview"></div>
+    <script type="text/javascript">
+        function imgPreView(event) {
+          var file = event.target.files[0];
+          var reader = new FileReader();
+          var preview = document.getElementById("preview");
+          var previewImage = document.getElementById("previewImage");
+   
+          if(previewImage != null) {
+            preview.removeChild(previewImage);
+          }
+          reader.onload = function(event) {
+            var img = document.createElement("img");
+            img.setAttribute("src", reader.result);
+            img.setAttribute("id", "previewImage");
+            preview.appendChild(img);
+          };
+ 
+          reader.readAsDataURL(file);
+        }
+    </script>
 </div>

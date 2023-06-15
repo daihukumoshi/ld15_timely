@@ -16,7 +16,9 @@ class Login < ActiveRecord::Migration[6.1]
       t.integer :user_id
       t.integer :commenter_id
       t.string :comment
+      t.string :img
       t.datetime :time
+      t.boolean :reaction
     end
     
     create_table :friends do |t|

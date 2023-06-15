@@ -56,8 +56,34 @@
     <h3>コメント</h3>
     <% Comment.where(user_id: session[:user]).each do |comment|%>
     <div class="comm">
-        <p class="comment_text"><%= User.find(comment.commenter_id).display_name %>　　　　　<%= comment.time.mon %>/<%= comment.time.day %>　<%= comment.time.hour.to_i + 9 %>:<%= comment.time.min %></p>
-        <p><%= comment.comment %></p>
+        <% hour = comment.time.hour.to_i + 9 %>
+        <% if hour > 24 %>
+            <% hour = hour % 24 %>
+        <% end %>
+        <% min = comment.time.min %>
+        <% if min < 10 %>
+            <% min = "0" + min.to_s %>
+        <% end %>
+        
+        <p class="comment_text"><%= User.find(comment.commenter_id).display_name %>　　　　　<%= comment.time.mon %>/<%= comment.time.day %>　<%= hour %>:<%= min %></p>
+        <% unless comment.comment.empty? %>
+            <div class="says">
+                <p><%= comment.comment %></p>
+            </div>
+        <% end %>
+        
+        <% if comment.reaction==true %>
+            <img src="/assets/images/heart2.png" class="mini">
+        <% else %>
+            <form action='/<%= comment.id %>/permit' method='post'>
+                <input type="image" src="/assets/images/heart1.png" class="mini">
+            </form>
+        <% end %>
+        
+        
+        <% unless comment.img.empty? %>
+            <img src="<%= comment.img %>" class="photo">
+        <% end %>
     </div>
     <% end %>
 </div>

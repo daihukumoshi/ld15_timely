@@ -2,9 +2,21 @@ require 'bundler/setup'
 
 Bundler.require
 require 'sinatra/reloader' if development?
+require 'open-uri'
+require 'sinatra/json'
 require './models.rb'
 
 enable :sessions
+
+before do
+    Dotenv.load
+    Cloudinary.config do |config|
+        config.cloud_name = ENV['CLOUD_NAME']
+        config.api_key = ENV['CLOUDINARY_API_KEY']
+        config.api_secret = ENV['CLOUDINARY_API_SECRET']
+    end
+end
+
 before '/' do
     if session[:user].nil?
        redirect '/signin'
@@ -168,10 +180,29 @@ post '/:user_id/unfollow' do
 end
 
 post '/:user_id/comment' do
-    Comment.create(user_id: params[:user_id], commenter_id: session[:user], comment: params[:comment], time: Time.now)
-    @the_user = User.find(params[:user_id])
-    erb :profile
+    img_url=''
+    if params[:file]
+        img = params[:file]
+        tempfile = img[:tempfile]
+        upload = Cloudinary::Uploader.upload(tempfile.path)
+        img_url = upload['url']
+    end
+    
+    if params[:comment].nil? && img_url==''
+        erb :profile
+    else
+        Comment.create(user_id: params[:user_id], commenter_id: session[:user], comment: params[:comment], time: Time.now, img: img_url, reaction: false)
+        @the_user = User.find(params[:user_id])
+        erb :profile
+    end
 end
+
+post '/:comment_id/permit' do
+    Comment.find(params[:comment_id]).update(reaction: true);
+    erb :mypage
+end
+
+
 
 helpers do
     def time_arrivehour current_id
